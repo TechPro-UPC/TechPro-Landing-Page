@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://i.ibb.co/4ZkhmN0/mindbridge-icon.png" type="image/png">
+</head>
+
+<body class="font-sans text-slate-900 bg-white leading-relaxed bg-gradient-to-b from-indigo-50 via-teal-50 to-white">
+
+<!-- Botón flotante para restaurar navbar -->
+<button id="restoreNavbarBtn"
+        class="fixed top-4 left-4 z-50 bg-indigo-700 text-white p-3 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:bg-indigo-800 transition-all duration-500 transform -translate-y-10 opacity-0 pointer-events-none"
+        aria-label="Mostrar navbar">
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+  </svg>
+</button>
+
+<!-- Navbar -->
+<header id="navbarWrapper"
+        class="fixed top-0 left-0 w-full z-40 flex justify-center px-5 transform transition-all duration-500 ease-in-out translate-y-0 opacity-100">
+  <nav class="flex items-center justify-between w-full max-w-screen-xl backdrop-blur-md bg-white/90 border border-slate-200 shadow-lg px-10 py-4 mt-5 rounded-full ring-1 ring-slate-100">
+
+    <!-- Botón colapsar -->
+    <button id="collapseNavbarBtn"
+            class="mr-6 text-indigo-700 hover:text-white bg-indigo-100 hover:bg-indigo-700 transition-all duration-300 rounded-full p-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <!-- Logo / Wordmark -->
+    <div class="flex items-center gap-3">
+      <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex items-center gap-2">
+        <img src="https://i.ibb.co/pr3cTQn9/mindbridge-icon.jpg" alt="mindbridge-icon" class="h-16 w-16 rounded-md"/>
+        <span class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-teal-600">MindBridge</span>
+      </button>
+    </div>
+
+    <!-- Links -->
+    <ul class="hidden md:flex gap-6 flex-1 justify-center text-base font-medium text-slate-600">
+      <li>
+        <a href="#features" class="hover:text-indigo-700 transition-colors duration-200 relative group" data-i18n="navbar_features">
+          Features
+          <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-700 transition-all group-hover:w-full"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#howitworks" class="hover:text-indigo-700 transition-colors duration-200 relative group" data-i18n="navbar_howitworks">
+          How it Works
+          <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-700 transition-all group-hover:w-full"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#pricing" class="hover:text-indigo-700 transition-colors duration-200 relative group" data-i18n="navbar_pricing">
+          Pricing
+          <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-700 transition-all group-hover:w-full"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#testimonials" class="hover:text-indigo-700 transition-colors duration-200 relative group" data-i18n="navbar_testimonials">
+          Testimonials
+          <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-700 transition-all group-hover:w-full"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#about-product-video" class="hover:text-indigo-700 transition-colors duration-200 relative group" data-i18n="video_tag">
+          Product Video
+          <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-700 transition-all group-hover:w-full"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#faq" class="hover:text-indigo-700 transition-colors duration-200 relative group" data-i18n="navbar_faq">
+          FAQ
+          <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-700 transition-all group-hover:w-full"></span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Selector idioma -->
+    <div class="relative mr-4">
+      <button id="languageToggle" class="flex items-center gap-2 px-3 py-2 text-slate-700 hover:text-indigo-700 transition-colors duration-200 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md">
+        <img id="currentFlag" src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" width="20" height="14" class="rounded-sm"/>
+        <span id="currentLangText" class="text-sm font-medium">English</span>
+        <svg class="w-4 h-4 transition-transform duration-200" id="languageArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+
+      <div id="languageMenu"
+           class="absolute top-full right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden opacity-0 invisible transform scale-95 transition-all duration-200 z-50">
+        <button class="language-option w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-indigo-50 transition-colors duration-200" data-lang="en">
+          <img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" width="20" height="14" class="rounded-sm"/>
+          <span class="text-sm font-medium text-slate-700" data-i18n="lang_english">English</span>
+        </button>
+        <button class="language-option w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-indigo-50 transition-colors duration-200" data-lang="es">
+          <img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg" width="20" height="14" class="rounded-sm"/>
+          <span class="text-sm font-medium text-slate-700" data-i18n="lang_spanish">Spanish</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <a href="#hero"
+       class="ml-4 bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-md shadow-md hover:bg-indigo-800 transition duration-300"
+       data-i18n="get_started">
+      Get Started
+    </a>
+  </nav>
+</header>
+
+<!-- Scripts navbar + i18n -->
+<script>
+  // i18n
+  let translations = {};
+  let isMenuOpen = false;
+
+  const languages = {
+    en: { name: "English", flag: "https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" },
+    es: { name: "Español", flag: "https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg" }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const languageToggle = document.getElementById('languageToggle');
+    const languageMenu = document.getElementById('languageMenu');
+    const languageArrow = document.getElementById('languageArrow');
+    const currentFlag = document.getElementById('currentFlag');
+    const currentLangText = document.getElementById('currentLangText');
+    const languageOptions = document.querySelectorAll('.language-option');
+
+    function toggleMenu() {
+      isMenuOpen = !isMenuOpen;
+      if (isMenuOpen) {
+        languageMenu.classList.remove('opacity-0', 'invisible', 'scale-95');
+        languageMenu.classList.add('opacity-100', 'visible', 'scale-100');
+        languageArrow.style.transform = 'rotate(180deg)';
+      } else {
+        languageMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+        languageMenu.classList.remove('opacity-100', 'visible', 'scale-100');
+        languageArrow.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function loadTranslations(lang) {
+      fetch('assets/translation/translations.json')
+              .then(r => r.json())
+              .then(data => { translations = data; switchLanguage(lang); })
+              .catch(err => console.error('Error loading translations:', err));
+    }
+
+    function switchLanguage(lang) {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang] && translations[lang][key]) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+      currentFlag.src = languages[lang].flag;
+      currentLangText.textContent = languages[lang].name;
+    }
+
+    languageToggle.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+    languageOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const langCode = option.getAttribute('data-lang');
+        loadTranslations(langCode);
+        toggleMenu();
+      });
+    });
+    document.addEventListener('click', () => { if (isMenuOpen) toggleMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isMenuOpen) toggleMenu(); });
+
+    loadTranslations('en'); // default
+  });
+
+  // Colapsar/Restaura navbar
+  const collapseBtn = document.getElementById('collapseNavbarBtn');
+  const restoreBtn = document.getElementById('restoreNavbarBtn');
+  const navbar = document.getElementById('navbarWrapper');
+
+  collapseBtn.addEventListener('click', () => {
+    navbar.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+    restoreBtn.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-10');
+    restoreBtn.classList.add('translate-y-0');
+  });
+
+  restoreBtn.addEventListener('click', () => {
+    navbar.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+    restoreBtn.classList.add('opacity-0', 'pointer-events-none', '-translate-y-10');
+    restoreBtn.classList.remove('translate-y-0');
+  });
+</script>
+
+<!-- Hero -->
+<section id="hero" class="min-h-screen flex flex-col items-center justify-center text-center gap-6 px-5 pt-60 pb-32 bg-gradient-to-b from-indigo-50 via-teal-50 to-white">
+  <h2 class="text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-indigo-800 via-indigo-500 to-slate-900 leading-tight">
+    <span data-i18n="hero_title1">Skip the Back-and-Forth</span><br class="hidden md:block">
+    <span class="mt-3 block" data-i18n="hero_title2">Book Therapy in Real Time</span>
+  </h2>
+
+  <p class="text-lg md:text-xl text-slate-700 max-w-2xl mt-6" data-i18n="hero_subtitle">
+    MindBridge connects patients and psychologists instantly. Real-time availability, smart matching, reminders, and secure payments — all in one place.
+  </p>
+
+  <a href="#features" data-i18n="hero_cta"
+     class="bg-gradient-to-r from-indigo-600 to-teal-600 text-white font-semibold px-8 py-4 rounded-full shadow-xl hover:from-indigo-700 hover:to-teal-700 transition duration-300 mt-8 text-lg">
+    Start for Free →
+  </a>
+
+  <img src="https://i.ibb.co/Prj4Knx/hero-mental-health.png" alt="MindBridge app preview"
+       class="mt-14 w-11/12 max-w-4xl rounded-2xl shadow-2xl border border-white/40"/>
+</section>
+
+<!-- Features -->
+<section id="features" class="py-20 space-y-28 bg-white">
+  <!-- F1 -->
+  <div class="max-w-screen-xl mx-auto px-6">
+    <div class="bg-gradient-to-b from-indigo-50 via-teal-50 to-white p-10 rounded-3xl shadow-xl flex flex-col lg:flex-row items-center gap-12">
+      <div class="lg:w-1/2">
+        <div class="text-sm font-medium text-indigo-700 uppercase tracking-wide mb-2" data-i18n="features_section_title">Features</div>
+        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 leading-tight" data-i18n="feature1_title">
+          Real-Time Scheduling with AI Assist
+        </h2>
+        <p class="text-slate-600 mt-4" data-i18n="feature1_description">
+          A visual calendar that syncs across your practice. Check availability, prevent conflicts, and let AI suggest the best slots and matches.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+          <div>
+            <h4 class="font-semibold" data-i18n="feature1_item1">📅 Interactive Calendar</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature1_item_1">See every provider’s schedule and bookings in real time.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature1_item2">⏳ Automatic Duration</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature1_item_2">Session durations are calculated automatically.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature1_item3">📲 One-Tap Booking</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature1_item_3">Patients book in seconds — you just supervise.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature1_item4">🧑‍⚕️ Provider Filters</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature1_item_4">Filter by specialty, modality, or provider.</p>
+          </div>
+        </div>
+
+        <button onclick="document.getElementById('howitworks').scrollIntoView({behavior:'smooth'})"
+                class="mt-10 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition"
+                data-i18n="features_cta">
+          Get Started →
+        </button>
+      </div>
+      <div class="lg:w-1/2">
+        <img src="https://i.ibb.co/9sD3Yqk/feature-calendar.png" alt="Real-Time Booking Calendar" class="w-full rounded-xl shadow-xl">
+      </div>
+    </div>
+  </div>
+
+  <!-- F2 -->
+  <div class="max-w-screen-xl mx-auto px-6">
+    <div class="bg-gradient-to-b from-indigo-50 via-teal-50 to-white p-10 rounded-3xl shadow-xl flex flex-col lg:flex-row-reverse items-center gap-12">
+      <div class="lg:w-1/2">
+        <div class="text-sm font-medium text-indigo-700 uppercase tracking-wide mb-2" data-i18n="features_section_title">Features</div>
+        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 leading-tight" data-i18n="feature2_title">
+          Payments, Reminders & Telepsychology
+        </h2>
+        <p class="text-slate-600 mt-4" data-i18n="feature2_description">
+          Manage your entire workflow from one secure dashboard: bookings, reminders (WhatsApp/SMS/email), online payments, and virtual sessions.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+          <div>
+            <h4 class="font-semibold" data-i18n="feature2_item1">💳 Secure Payments</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature2_item_1">Accept fast, secure payments right in the app.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature2_item2">🧾 Service Setup</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature2_item_2">Define services, pricing, and durations with ease.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature2_item3">📊 Booking Dashboard</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature2_item_3">Track appointments and availability at a glance.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature2_item4">🔔 Automated Reminders</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature2_item_4">Automatic WhatsApp/SMS/email reminders reduce no-shows.</p>
+          </div>
+        </div>
+
+        <button onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})"
+                class="mt-10 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition"
+                data-i18n="features_cta">
+          Get Started →
+        </button>
+      </div>
+      <div class="lg:w-1/2">
+        <img src="https://i.ibb.co/w6mFZgS/feature-telehealth.png" alt="Payments & Telepsychology" class="w-full rounded-xl shadow-xl">
+      </div>
+    </div>
+  </div>
+
+  <!-- F3 -->
+  <div class="max-w-screen-xl mx-auto px-6">
+    <div class="bg-gradient-to-b from-indigo-50 via-teal-50 to-white p-10 rounded-3xl shadow-xl flex flex-col lg:flex-row items-center gap-12">
+      <div class="lg:w-1/2">
+        <div class="text-sm font-medium text-indigo-700 uppercase tracking-wide mb-2" data-i18n="features_section_title">Features</div>
+        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 leading-tight" data-i18n="feature3_title">
+          Full Control with Professional Profiles
+        </h2>
+        <p class="text-slate-600 mt-4" data-i18n="feature3_description">
+          Every psychologist or clinic gets a customizable profile with specialties, modalities, pricing, and availability to help patients choose confidently.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+          <div>
+            <h4 class="font-semibold" data-i18n="feature3_item1">👥 Team Management</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature3_item_1">Add and manage psychologists within your clinic brand.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature3_item2">🛠️ Customizable Profiles</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature3_item_2">Set working hours, modalities, pricing, and photos.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature3_item3">📚 Specialties & Approach</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature3_item_3">Showcase specialties and approach to attract the right patients.</p>
+          </div>
+          <div>
+            <h4 class="font-semibold" data-i18n="feature3_item4">⚙️ Business Settings</h4>
+            <p class="text-sm text-slate-600" data-i18n="feature3_item_4">Adjust notifications, booking rules, and privacy settings.</p>
+          </div>
+        </div>
+
+        <button onclick="document.getElementById('about-product-video').scrollIntoView({behavior:'smooth'})"
+                class="mt-10 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition"
+                data-i18n="features_cta">
+          Get Started →
+        </button>
+      </div>
+      <div class="lg:w-1/2">
+        <img src="https://i.ibb.co/6H4mMvf/feature-profiles.png" alt="Professional Profiles" class="w-full rounded-xl shadow-xl">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it Works -->
+<section id="howitworks" class="bg-gradient-to-b from-white to-teal-50 py-20">
+  <div class="max-w-screen-xl mx-auto px-6 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-slate-800" data-i18n="title-prov">How it works for providers</h2>
+    <p class="text-slate-600 mt-3 max-w-2xl mx-auto" data-i18n="desc-prov">
+      Follow these simple steps to run a modern, patient-friendly mental-health practice.
+    </p>
+
+    <div class="relative mt-20">
+      <div class="absolute left-1/2 transform -translate-x-1/2 h-full border-l-2 border-indigo-200"></div>
+
+      <!-- Paso 1 -->
+      <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start md:gap-12 mb-20">
+        <div class="w-full md:w-1/2 md:pr-12 text-right md:text-left">
+          <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="title-prov-c">Create your account</h3>
+          <p class="text-slate-600" data-i18n="desc-prov-c">
+            Sign up and access a personalized dashboard to centralize your practice.
+          </p>
+        </div>
+        <div class="w-full md:w-1/2 mt-8 md:mt-0">
+          <img src="https://i.ibb.co/qxq6KXb/steps-1.png" alt="Step 1" class="rounded-xl shadow-lg mx-auto max-w-sm">
+        </div>
+        <div class="absolute left-1/2 top-1 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-teal-300 rounded-full w-12 h-12 flex items-center justify-center text-indigo-700 text-2xl">👤</div>
+      </div>
+
+      <!-- Paso 2 -->
+      <div class="relative z-10 flex flex-col md:flex-row-reverse items-center md:gap-12 mb-20">
+        <div class="w-full md:w-1/2 md:pl-12 text-left">
+          <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="title-prov-a">Add your team and availability</h3>
+          <p class="text-slate-600" data-i18n="desc-prov-a">
+            Register providers, define schedules, and manage calendars from one place.
+          </p>
+        </div>
+        <div class="w-full md:w-1/2 mt-8 md:mt-0">
+          <img src="https://i.ibb.co/jw2kzq7/steps-2.png" alt="Step 2" class="rounded-xl shadow-lg mx-auto max-w-sm">
+        </div>
+        <div class="absolute left-1/2 top-1 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-teal-300 rounded-full w-12 h-12 flex items-center justify-center text-indigo-700 text-2xl">🧑‍⚕️</div>
+      </div>
+
+      <!-- Paso 3 -->
+      <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start md:gap-12 mb-20">
+        <div class="w-full md:w-1/2 md:pr-12 text-right md:text-left">
+          <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="title-prov-s">Define services & pricing</h3>
+          <p class="text-slate-600" data-i18n="desc-prov-s">
+            Set durations, fees, modalities, and specialties per provider.
+          </p>
+        </div>
+        <div class="w-full md:w-1/2 mt-8 md:mt-0">
+          <img src="https://i.ibb.co/3fS2LM1/steps-3.png" alt="Step 3" class="rounded-xl shadow-lg mx-auto max-w-sm">
+        </div>
+        <div class="absolute left-1/2 top-1 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-teal-300 rounded-full w-12 h-12 flex items-center justify-center text-indigo-700 text-2xl">🗂️</div>
+      </div>
+
+      <!-- Paso 4 -->
+      <div class="relative z-10 flex flex-col md:flex-row-reverse items-center md:gap-12 mb-20">
+        <div class="w-full md:w-1/2 md:pl-12 text-left">
+          <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="title-prov-p">Customize your profile</h3>
+          <p class="text-slate-600" data-i18n="desc-prov-p">
+            Add bio, specialties, address, telehealth links, payment methods, and more.
+          </p>
+        </div>
+        <div class="w-full md:w-1/2 mt-8 md:mt-0">
+          <img src="https://i.ibb.co/W3XWZs1/steps-4.png" alt="Step 4" class="rounded-xl shadow-lg mx-auto max-w-sm">
+        </div>
+        <div class="absolute left-1/2 top-1 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-teal-300 rounded-full w-12 h-12 flex items-center justify-center text-indigo-700 text-2xl">🧾</div>
+      </div>
+
+      <!-- Paso 5 -->
+      <div class="relative z-10 flex flex-col md:flex-row items-center md:items-start md:gap-12 mb-20">
+        <div class="w-full md:w-1/2 md:pr-12 text-right md:text-left">
+          <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="title-prov-v">Start booking in real time</h3>
+          <p class="text-slate-600" data-i18n="desc-prov-v">
+            Patients see live availability, book instantly, and receive reminders.
+          </p>
+        </div>
+        <div class="w-full md:w-1/2 mt-8 md:mt-0">
+          <img src="https://i.ibb.co/f1BWHQ7/steps-5.png" alt="Step 5" class="rounded-xl shadow-lg mx-auto max-w-sm">
+        </div>
+        <div class="absolute left-1/2 top-1 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-teal-300 rounded-full w-12 h-12 flex items-center justify-center text-indigo-700 text-2xl">📆</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-20 max-w-6xl mx-auto px-6">
+      <div class="bg-white rounded-3xl shadow-xl px-10 py-10 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div class="text-center lg:text-left">
+          <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2" data-i18n="title-extra">Ready to manage your practice like never before?</h3>
+          <p class="text-slate-600" data-i18n="desc-extra">Optimize your workflows, engage patients, and elevate your professional presence.</p>
+        </div>
+        <a href="#pricing" class="bg-gradient-to-r from-indigo-600 to-teal-600 text-white px-8 py-4 rounded-full shadow-md font-semibold hover:from-indigo-700 hover:to-teal-700 transition" data-i18n="bt-extra">
+          Start now →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="bg-gradient-to-b from-white to-teal-50 py-20">
+  <div class="max-w-screen-xl mx-auto px-6 text-center">
+    <div class="mb-16">
+      <div class="text-sm text-indigo-700 font-medium mb-2 flex justify-center items-center gap-2" data-i18n="pricing_section_title">
+        <svg class="w-5 h-5 text-indigo-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c.828 0 1.5-.895 1.5-2S12.828 4 12 4s-1.5.895-1.5 2 .672 2 1.5 2zm0 4c.828 0 1.5-.895 1.5-2s-.672-2-1.5-2-1.5.895-1.5 2 .672 2 1.5 2zm0 4c.828 0 1.5-.895 1.5-2s-.672-2-1.5-2-1.5.895-1.5 2 .672 2 1.5 2z"/></svg>
+        Pricing
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800" data-i18n="pricing_title">Flexible Plans for Independent Psychologists and Clinics</h2>
+      <p class="text-slate-600 mt-2 max-w-xl mx-auto" data-i18n="pricing_subtitle">Start free and upgrade anytime as your practice grows.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Essential -->
+      <div class="bg-white rounded-xl shadow-md p-8 text-left border border-slate-100">
+        <p class="text-sm text-slate-500 font-medium mb-2" data-i18n="plan1_description">Start simple and stay organized</p>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="plan1_name">Essential</h3>
+        <ul class="space-y-3 text-sm text-slate-700 mb-6">
+          <li class="flex items-center gap-2" data-i18n="plan1_feature1"><span class="text-indigo-600">✔</span> Smart calendar (single provider)</li>
+          <li class="flex items-center gap-2" data-i18n="plan1_feature2"><span class="text-indigo-600">✔</span> Public booking page</li>
+          <li class="flex items-center gap-2" data-i18n="plan1_feature3"><span class="text-indigo-600">✔</span> Basic reminders</li>
+          <li class="flex items-center gap-2" data-i18n="plan1_feature4"><span class="text-indigo-600">✔</span> Profile with specialties</li>
+          <li class="flex items-center gap-2" data-i18n="plan1_feature5"><span class="text-indigo-600">✔</span> 1 provider</li>
+        </ul>
+        <p class="text-3xl font-bold text-indigo-700 mb-4" data-i18n="plan1_price">Free</p>
+        <button onclick="document.getElementById('about-product-video').scrollIntoView({behavior:'smooth'})"
+                class="w-full bg-white border border-indigo-600 text-indigo-700 font-semibold py-2 rounded-md hover:bg-indigo-50 transition"
+                data-i18n="plan1_cta">Get Started</button>
+      </div>
+
+      <!-- Pro -->
+      <div class="bg-white rounded-xl shadow-lg p-8 text-left border-2 border-indigo-600 relative">
+        <p class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-semibold rounded-bl-md px-3 py-1">Most Popular</p>
+        <p class="text-sm text-slate-500 font-medium mb-2" data-i18n="plan2_description">Grow your practice with automation</p>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="plan2_name">ProCare</h3>
+        <ul class="space-y-3 text-sm text-slate-700 mb-6">
+          <li class="flex items-center gap-2" data-i18n="plan2_feature1"><span class="text-indigo-600">✔</span> Advanced calendar sync</li>
+          <li class="flex items-center gap-2" data-i18n="plan2_feature2"><span class="text-indigo-600">✔</span> WhatsApp/SMS reminders</li>
+          <li class="flex items-center gap-2" data-i18n="plan2_feature3"><span class="text-indigo-600">✔</span> Up to 5 providers</li>
+          <li class="flex items-center gap-2" data-i18n="plan2_feature4"><span class="text-indigo-600">✔</span> Waitlists & auto-fill cancellations</li>
+          <li class="flex items-center gap-2" data-i18n="plan2_feature5"><span class="text-indigo-600">✔</span> Priority support</li>
+        </ul>
+        <p class="text-3xl font-bold text-indigo-700 mb-4" data-i18n="plan2_price">S/69.9<span class="text-base text-slate-500 font-normal">/month</span></p>
+        <button onclick="document.getElementById('testimonials').scrollIntoView({behavior:'smooth'})"
+                class="w-full bg-indigo-700 text-white font-semibold py-2 rounded-md hover:bg-indigo-800 transition"
+                data-i18n="plan2_cta">Start Free Trial</button>
+      </div>
+
+      <!-- Clinic Plus -->
+      <div class="bg-white rounded-xl shadow-md p-8 text-left border border-slate-100">
+        <p class="text-sm text-slate-500 font-medium mb-2" data-i18n="plan3_description">All-in-one power for clinics</p>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2" data-i18n="plan3_name">Clinic Plus</h3>
+        <ul class="space-y-3 text-sm text-slate-700 mb-6">
+          <li class="flex items-center gap-2" data-i18n="plan3_feature1"><span class="text-indigo-600">✔</span> Unlimited providers</li>
+          <li class="flex items-center gap-2" data-i18n="plan3_feature2"><span class="text-indigo-600">✔</span> Advanced analytics & reports</li>
+          <li class="flex items-center gap-2" data-i18n="plan3_feature3"><span class="text-indigo-600">✔</span> Custom roles & permissions</li>
+          <li class="flex items-center gap-2" data-i18n="plan3_feature4"><span class="text-indigo-600">✔</span> Compliance & audit logs</li>
+          <li class="flex items-center gap-2" data-i18n="plan3_feature5"><span class="text-indigo-600">✔</span> VIP support</li>
+        </ul>
+        <p class="text-3xl font-bold text-indigo-700 mb-4" data-i18n="plan3_price">S/129.9<span class="text-base text-slate-500 font-normal">/month</span></p>
+        <button onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})"
+                class="w-full bg-white border border-indigo-600 text-indigo-700 font-semibold py-2 rounded-md hover:bg-indigo-50 transition"
+                data-i18n="plan3_cta">Contact Us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-24 px-6 bg-gradient-to-b from-teal-50 to-white">
+  <div class="max-w-6xl mx-auto rounded-3xl bg-white shadow-xl p-10 overflow-hidden">
+    <div class="text-center mb-12">
+      <div class="text-sm text-indigo-700 font-medium mb-2 flex justify-center items-center gap-2" data-i18n="navbar_testimonials">
+        <svg class="w-5 h-5 text-indigo-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9"/></svg>
+        Testimonials
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800" data-i18n="testimonials_title">Chosen by mental-health professionals</h2>
+      <p class="text-slate-600 mt-2 max-w-2xl mx-auto" data-i18n="testimonials_subtitle">See why MindBridge is the ideal co-pilot for modern practices.</p>
+    </div>
+
+    <!-- Carrusel fila 1 -->
+    <div class="overflow-hidden mb-10">
+      <div class="flex gap-6 animate-carousel-left">
+        <template id="carousel-row-1">
+          <div class="testimonial-card">
+            <div class="flex mb-2 text-indigo-600 text-lg">★★★★★</div>
+            <p class="text-slate-700 mb-4" data-i18n="testimonial1_text">MindBridge cut our coordination time drastically. Patients book themselves and show up more consistently.</p>
+            <div class="flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Grecia Almonte" class="w-10 h-10 rounded-full object-cover">
+              <div>
+                <p class="font-semibold text-slate-800">Grecia Almonte</p>
+                <p class="text-sm text-slate-500" data-i18n="testimonial1_role">Psychologist (Educational focus)</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="flex mb-2 text-indigo-600 text-lg">★★★★★</div>
+            <p class="text-slate-700 mb-4" data-i18n="testimonial2_text">The calendar, reminders, and quick rebooking keep my agenda full without extra admin work.</p>
+            <div class="flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/men/20.jpg" alt="Jorge García" class="w-10 h-10 rounded-full object-cover">
+              <div>
+                <p class="font-semibold text-slate-800">Jorge García</p>
+                <p class="text-sm text-slate-500" data-i18n="testimonial2_role">Clinical Psychologist</p>
+              </div>
+            </div>
+          </div>
+        </template>
+        <script>
+          const row1 = document.querySelector('.animate-carousel-left');
+          const row1Content = document.getElementById('carousel-row-1').content;
+          row1.appendChild(row1Content.cloneNode(true));
+          row1.appendChild(row1Content.cloneNode(true));
+        </script>
+      </div>
+    </div>
+
+    <!-- Carrusel fila 2 -->
+    <div class="overflow-hidden">
+      <div class="flex gap-6 animate-carousel-right">
+        <template id="carousel-row-2">
+          <div class="testimonial-card">
+            <div class="flex mb-2 text-indigo-600 text-lg">★★★★★</div>
+            <p class="text-slate-700 mb-4" data-i18n="testimonial3_text">I can highlight my specialties and availability. New patients find the right fit faster.</p>
+            <div class="flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Camila Miranda" class="w-10 h-10 rounded-full object-cover">
+              <div>
+                <p class="font-semibold text-slate-800">Camila Miranda</p>
+                <p class="text-sm text-slate-500" data-i18n="testimonial3_role">Organizational Psychologist</p>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="flex mb-2 text-indigo-600 text-lg">★★★★★</div>
+            <p class="text-slate-700 mb-4" data-i18n="testimonial4_text">For our small clinic, the waitlist auto-fills empty slots and reduces lost revenue.</p>
+            <div class="flex items-center gap-3">
+              <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Rafaela Barrozo" class="w-10 h-10 rounded-full object-cover">
+              <div>
+                <p class="font-semibold text-slate-800">Rafaela Barrozo</p>
+                <p class="text-sm text-slate-500" data-i18n="testimonial4_role">Practice Manager</p>
+              </div>
+            </div>
+          </div>
+        </template>
+        <script>
+          const row2 = document.querySelector('.animate-carousel-right');
+          const row2Content = document.getElementById('carousel-row-2').content;
+          row2.appendChild(row2Content.cloneNode(true));
+          row2.appendChild(row2Content.cloneNode(true));
+        </script>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes carousel-left { 0% { transform: translateX(0);} 100% { transform: translateX(-50%);} }
+  @keyframes carousel-right { 0% { transform: translateX(-50%);} 100% { transform: translateX(0);} }
+  .animate-carousel-left { animation: carousel-left 60s linear infinite; }
+  .animate-carousel-right { animation: carousel-right 60s linear infinite; }
+  .testimonial-card {
+    width: 300px; background: #f9fafb; padding: 1.5rem; border-radius: 1rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06); font-size: .875rem; line-height: 1.5;
+    color: #334155; flex-shrink: 0;
+  }
+</style>
+
+<!-- Product Video -->
+<section id="about-product-video" class="py-24 px-6 bg-gradient-to-b from-white to-teal-50">
+  <div class="max-w-6xl mx-auto rounded-3xl bg-white shadow-xl p-10 overflow-hidden">
+    <div class="text-center mb-12">
+      <div class="text-sm text-indigo-700 font-medium mb-2 flex justify-center items-center gap-2" data-i18n="video_tag">
+        <svg class="w-5 h-5 text-indigo-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553 2.276a1 1 0 010 1.788L15 16.34V10z M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>
+        </svg>
+        Product Video
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800" data-i18n="video_title">See MindBridge in Action</h2>
+      <p class="text-slate-600 mt-2 max-w-2xl mx-auto" data-i18n="video_des">Explore MindBridge’s core features and how it improves continuity of care.</p>
+    </div>
+
+    <div class="relative w-full overflow-hidden rounded-xl shadow-lg" style="padding-top:56.25%;">
+      <iframe class="absolute top-0 left-0 w-full h-full"
+              src="https://www.youtube.com/embed/6XoZkCqmiOo"
+              title="MindBridge Product Video" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-24 px-6 bg-gradient-to-b from-white to-teal-50">
+  <div class="max-w-4xl mx-auto rounded-3xl bg-white shadow-xl p-10 overflow-hidden">
+    <div class="text-center mb-12">
+      <div class="text-sm text-indigo-700 font-medium mb-2 flex justify-center items-center gap-2" data-i18n="faq_title">
+        <svg class="w-5 h-5 text-indigo-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9"/>
+        </svg>
+        Frequently Asked Questions
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800" data-i18n="faq_name">Clear Your Doubts About MindBridge</h2>
+      <p class="text-slate-600 mt-2 max-w-2xl mx-auto" data-i18n="faq_subtitle">Answers to common questions from psychologists and patients.</p>
+    </div>
+
+    <div class="space-y-4 text-left" id="faq-accordion">
+      <!-- Items FAQ (mismas claves i18n) -->
+      <div class="bg-slate-50 shadow-sm rounded-xl overflow-hidden transition-all duration-300">
+        <button class="w-full flex justify-between items-center px-5 py-4 text-left font-medium text-slate-800 focus:outline-none" data-i18n="faq_question1" data-toggle>
+          Is MindBridge suitable for solo practitioners and clinics?
+          <svg class="w-5 h-5 text-indigo-600 transform transition-transform" data-icon fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="faq-content px-5 text-slate-600 transition-all duration-500 ease-in-out max-h-0 overflow-hidden" data-content data-i18n="faq_answer1">
+          <p class="py-4">Yes. MindBridge adapts to any size — from independent professionals to multi-provider clinics.</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 shadow-sm rounded-xl overflow-hidden transition-all duration-300">
+        <button class="w-full flex justify-between items-center px-5 py-4 text-left font-medium text-slate-800 focus:outline-none" data-toggle data-i18n="faq_question2">
+          Do I need internet to use MindBridge?
+          <svg class="w-5 h-5 text-indigo-600 transform transition-transform" data-icon fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="faq-content px-5 text-slate-600 transition-all duration-500 ease-in-out max-h-0 overflow-hidden" data-content data-i18n="faq_answer2">
+          <p class="py-4">Yes. MindBridge is cloud-based and syncs data in real time to avoid conflicts.</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 shadow-sm rounded-xl overflow-hidden transition-all duration-300">
+        <button class="w-full flex justify-between items-center px-5 py-4 text-left font-medium text-slate-800 focus:outline-none" data-toggle data-i18n="faq_question3">
+          Does MindBridge help reduce no-shows?
+          <svg class="w-5 h-5 text-indigo-600 transform transition-transform" data-icon fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="faq-content px-5 text-slate-600 transition-all duration-500 ease-in-out max-h-0 overflow-hidden" data-content data-i18n="faq_answer3">
+          <p class="py-4">Absolutely. Automated WhatsApp/SMS/email reminders and waitlists help minimize missed appointments.</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 shadow-sm rounded-xl overflow-hidden transition-all duration-300">
+        <button class="w-full flex justify-between items-center px-5 py-4 text-left font-medium text-slate-800 focus:outline-none" data-toggle data-i18n="faq_question4">
+          Is there a free trial?
+          <svg class="w-5 h-5 text-indigo-600 transform transition-transform" data-icon fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="faq-content px-5 text-slate-600 transition-all duration-500 ease-in-out max-h-0 overflow-hidden" data-content data-i18n="faq_answer4">
+          <p class="py-4">Yes. You can try the full experience for 14 days with no commitment.</p>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 shadow-sm rounded-xl overflow-hidden transition-all duration-300">
+        <button class="w-full flex justify-between items-center px-5 py-4 text-left font-medium text-slate-800 focus:outline-none" data-toggle data-i18n="faq_question5">
+          Does MindBridge handle payments and telepsychology?
+          <svg class="w-5 h-5 text-indigo-600 transform transition-transform" data-icon fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="faq-content px-5 text-slate-600 transition-all duration-500 ease-in-out max-h-0 overflow-hidden" data-content data-i18n="faq_answer5">
+          <p class="py-4">Yes. You can accept online payments, run video sessions, and manage both online and in-person modalities securely.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // FAQ acordeón
+  document.querySelectorAll('[data-toggle]').forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('[data-icon]');
+      const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+      document.querySelectorAll('[data-content]').forEach(el => {
+        el.style.maxHeight = null;
+        const iconInside = el.previousElementSibling.querySelector('[data-icon]');
+        iconInside && iconInside.classList.remove('rotate-180');
+      });
+
+      if (!isOpen) {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        icon.classList.add('rotate-180');
+      }
+    });
+  });
+</script>
+
+<style>
+  .faq-content { transition: max-height .5s ease; overflow: hidden; max-height: 0; }
+  .rotate-180 { transform: rotate(180deg); }
+</style>
+
+<!-- CTA final -->
+<section id="cta" class="text-center py-28 px-6 bg-gradient-to-b from-white to-teal-50">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-sm text-indigo-700 font-medium mb-4 inline-block px-4 py-1 bg-white shadow rounded-full" data-i18n="tag">
+      Take your mental-health practice to the next level
+    </div>
+    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 leading-tight" data-i18n="cta_title">
+      Ready to transform your care journey?
+    </h2>
+    <p class="text-slate-600 mt-6 mb-10" data-i18n="cta_subtitle">
+      MindBridge helps you manage appointments, reduce friction, and stay connected with patients.
+    </p>
+    <a href="#hero" class="inline-block px-8 py-4 text-white font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-teal-600 shadow-lg hover:from-indigo-700 hover:to-teal-700 transition" data-i18n="cta_button">
+      Start for Free →
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gradient-to-b from-teal-50 to-white text-sm text-slate-600">
+  <div class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-5 gap-8">
+    <!-- Brand -->
+    <div class="md:col-span-1">
+      <h1 class="text-xl font-bold text-indigo-700 mb-4">MindBridge</h1>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h4 class="text-slate-800 font-semibold mb-3" data-i18n="footer_quick_links">Quick Links</h4>
+      <ul class="space-y-2">
+        <li><a href="#hero" class="hover:text-indigo-700" data-i18n="footer_link1">Home</a></li>
+        <li><a href="#features" class="hover:text-indigo-700" data-i18n="footer_link2">Features</a></li>
+        <li><a href="#faq" class="hover:text-indigo-700" data-i18n="footer_link3">FAQ</a></li>
+        <li><a href="#pricing" class="hover:text-indigo-700" data-i18n="footer_link4">Support</a></li>
+      </ul>
+    </div>
+
+    <!-- Support -->
+    <div>
+      <h4 class="text-slate-800 font-semibold mb-3" data-i18n="footer_support">Support</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-indigo-700" data-i18n="footer_support_link1">Help Center</a></li>
+        <li><a href="#" class="hover:text-indigo-700" data-i18n="footer_support_link2">Getting Started</a></li>
+        <li><a href="#" class="hover:text-indigo-700" data-i18n="footer_support_link3">Contact Support</a></li>
+        <li><a href="#" class="hover:text-indigo-700" data-i18n="footer_support_link4">Community Forums</a></li>
+        <li><a href="#" class="hover:text-indigo-700" data-i18n="footer_support_link5">Documentation</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div>
+      <h4 class="text-slate-800 font-semibold mb-3" data-i18n="footer_contact">Contact Us</h4>
+      <ul class="space-y-2">
+        <li data-i18n="footer_contact_info1">📧 contact@mindbridge.pe</li>
+        <li data-i18n="footer_contact_info2">📞 (+51) 999 999 999</li>
+        <li data-i18n="footer_contact_info3">📍 Lima, Peru</li>
+      </ul>
+    </div>
+
+    <!-- Social -->
+    <div>
+      <h4 class="text-slate-800 font-semibold mb-3" data-i18n="footer_social">Social</h4>
+      <div class="flex space-x-3">
+        <a href="https://www.facebook.com/mindbridge.pe" class="bg-indigo-600 hover:bg-indigo-700 text-white w-9 h-9 rounded-full flex items-center justify-center">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://x.com/mindbridge_pe" class="bg-indigo-600 hover:bg-indigo-700 text-white w-9 h-9 rounded-full flex items-center justify-center">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://www.linkedin.com/company/mindbridge-pe" class="bg-indigo-600 hover:bg-indigo-700 text-white w-9 h-9 rounded-full flex items-center justify-center">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://www.youtube.com/@mindbridge" class="bg-indigo-600 hover:bg-indigo-700 text-white w-9 h-9 rounded-full flex items-center justify-center">
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a href="https://www.instagram.com/mindbridge.pe" class="bg-indigo-600 hover:bg-indigo-700 text-white w-9 h-9 rounded-full flex items-center justify-center">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="text-center border-t border-slate-200 py-4 text-xs text-slate-500" data-i18n="footer_copyright">
+    © 2025 MindBridge (TechPro). All rights reserved.
+  </div>
+</footer>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>
