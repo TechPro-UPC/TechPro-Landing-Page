@@ -334,9 +334,10 @@
         "video_tag": "Video del Producto",
         "video_title": "Descubre MindBridge en acción",
         "video_des": "Conoce cómo MindBridge mejora la continuidad terapéutica y reduce inasistencias.",
+                
         "tag": "Lleva tu práctica de salud mental al siguiente nivel",
 
-        "títle-prov": "Cómo funciona para los proveedores",
+        "title-prov": "Cómo funciona para los proveedores",
         "desc-prov": "Sigue estos pasos para gestionar eficientemente tu práctica y ofrecer una experiencia profesional.",
         "title-prov-c": "Crea tu cuenta",
         "desc-prov-c": "Regístrate y accede a tu panel.",
@@ -349,4 +350,7 @@
         "title-prov-v": "Consulta tu calendario",
         "desc-prov-v": "Visualiza todas las agendas y gestiona reservas.",
         "title-extra": "¿Listo para gestionar tu práctica como nunca?",
-        "desc-extra": "Optimiza tu flujo de trabajo, conecta con pacientes y me
+        "desc-extra": "Optimiza tu flujo de trabajo, conecta con pacientes y mejora tu presencia profesional.",
+        "bt-extra": "Comienza ahora →"
+  }
+}
